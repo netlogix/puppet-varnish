@@ -9,11 +9,14 @@ class varnish::params {
       $default_version = '3.0'
       $add_repo = true
       $vcl_reload_script = '/usr/sbin/varnish_reload_vcl'
-      if ($::service_provider == 'systemd') {
+      if ($::init_system == 'systemd') {
         $systemd = true
         $systemd_conf_path = '/usr/lib/systemd/system/varnish.service'
+        $systemd_ncsa_conf_path = undef
       } else {
         $systemd = false
+        $systemd_conf_path = undef
+        $systemd_ncsa_conf_path = undef
       }
       if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
         $conf_file_path = '/etc/varnish/varnish.params'
@@ -36,6 +39,8 @@ class varnish::params {
         $conf_file_path = '/etc/varnish/varnish.params'
       } else {
         $systemd = false
+        $systemd_conf_path = undef
+        $systemd_ncsa_conf_path = undef
         $conf_file_path = '/etc/default/varnish'
       }
       if ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '15.10') > 0) {

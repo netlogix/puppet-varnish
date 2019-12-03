@@ -19,6 +19,7 @@
 
 class varnish::service (
   $start                  = 'yes',
+  $enable                 = true,
   $systemd                = $varnish::params::systemd,
   $systemd_conf_path      = $varnish::params::systemd_conf_path,
   $vcl_reload_script      = $varnish::params::vcl_reload_script,
@@ -42,6 +43,7 @@ class varnish::service (
 
   service {'varnish':
     ensure  => $service_state,
+    enable  => $enable,
     restart => $reload_cmd,
     require => Package['varnish'],
   }
@@ -63,10 +65,10 @@ class varnish::service (
     include ::varnish::systemd
 
     file {  $systemd_conf_path :
-      ensure => file,
+      ensure  => file,
       content => template('varnish/varnish.service.erb'),
-      notify => Exec['Reload systemd'],
-      before => [Service['varnish'], Exec['restart-varnish']],
+      notify  => Exec['Reload systemd'],
+      before  => [Service['varnish'], Exec['restart-varnish']],
       require => Package['varnish'],
     }
   }

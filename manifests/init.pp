@@ -20,6 +20,9 @@
 #                 '4.0' and '4.1')
 # add_repo      - if set to false (defaults to true), the yum/apt repo is not added
 #
+# package_name  - the name of the package that should be installed
+#                 default value: varnish
+#
 # === Default values
 # Set to Varnish default values
 # With an exception to
@@ -75,6 +78,7 @@ class varnish (
   $varnish_conf_template        = 'varnish/varnish-conf.erb',
   $varnish_identity             = undef,
   $varnish_name                 = undef,
+  $package_name                 = 'varnish',
   $additional_parameters        = {},
   $additional_storages          = {},
   $conf_file_path               = $varnish::params::conf_file_path,
@@ -102,8 +106,8 @@ class varnish (
     /%$/: {
       case $storage_type {
         'malloc': {
-          $varnish_storage_size_percentage = scanf($varnish_storage_size, "%f%%")
-          $varnish_actual_storage_size = sprintf("%dM", floor($::memorysize_mb * $varnish_storage_size_percentage[0] / 100))
+          $varnish_storage_size_percentage = scanf($varnish_storage_size, '%f%%')
+          $varnish_actual_storage_size = sprintf('%dM', floor($::memorysize_mb * $varnish_storage_size_percentage[0] / 100))
         }
 
         default: {
