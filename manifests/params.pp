@@ -22,7 +22,11 @@ class varnish::params {
       }
     }
     'Debian': {
-      $vcl_reload_script = '/usr/share/varnish/reload-vcl'
+	    if versioncmp($::operatingsystemmajrelease, '18.04') < 0 {
+				$vcl_reload_script = '/usr/share/varnish/reload-vcl'
+      } else {
+				$vcl_reload_script = '/usr/share/varnish/varnishreload'
+	    }
       if ($::service_provider == 'systemd' or
           ($::operatingsystem == 'Ubuntu' and 
           versioncmp($::operatingsystemmajrelease, '15.10') > 0)) {
